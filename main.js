@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { VK } = require('vk-io');
 const TransformersApi = Function('return import("@xenova/transformers")')();
+// const TransformersApi2 = Function('return import("@huggingface/transformers")')();
 
 const vk = new VK({
     token: process.env.TOKEN,
@@ -39,13 +40,21 @@ async function imageClassification(attachments) {
     });
 
     if (message) return message
-
+    // const translator = await pipeline('translation', 'Xenova/nllb-200-distilled-600M');
     result.forEach(element => {
         message += element.label + "\n";
     });
-
     return message;
+
+    // const translatedText = await translator(message, {
+    //     src_lang: 'eng_Latn',
+    //     tgt_lang: 'rus_Cyrl',
+    // });
+
+    // return translatedText[0].translation_text + "\n";
 }
+
+// Xenova/remove-background-web - удаление фона https://huggingface.co/spaces/Xenova/remove-background-web
 
 initializePipeline().then(() => {
     vk.updates.on('message', async (context, next) => {
